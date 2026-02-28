@@ -1,0 +1,154 @@
+name: fastapi-template
+source: https://github.com/pyportion/fastapi-template
+version: 1.0.0
+description: A FastAPI Template.
+author: PyPortion Team
+type: fastapi
+
+portions:
+    - name: router
+      steps:
+          - type: ask
+            question: What is the router name?
+            variable: router_name
+
+          - type: copy
+            from_path: ["controller.py"]
+            to_path: ["app", "controller", "$router_name.py"]
+
+          - type: replace
+            path: ["app", "controller", "$router_name.py"]
+            replacements:
+                - keyword: CONTROLLER_CLASS_NAME
+                  value: $router_name
+                  mode: pascalcase
+
+          - type: copy
+            from_path: ["router.py"]
+            to_path: ["app", "api", "$router_name.py"]
+
+          - type: replace
+            path: ["app", "api", "$router_name.py"]
+            replacements:
+                - keyword: CONTROLLER_CLASS_NAME
+                  value: $router_name
+                  mode: pascalcase
+
+                - keyword: ROUTER_PREFIX
+                  value: $router_name
+                  mode: snakecase
+
+                - keyword: ROUTER_TAG
+                  value: $router_name
+                  mode: pascalcase
+
+                - keyword: ROUTER_FUNCTION_NAME
+                  value: $router_name
+                  mode: snakecase
+
+          - type: set_var
+            key: controller_class
+            value: $router_name
+            mode: pascalcase
+
+          - type: add_import
+            path: ["app", "controller", "__init__.py"]
+            import_statement: "from .$router_name import $controller_class"
+
+          - type: add_to_list
+            path: ["app", "controller", "__init__.py"]
+            list_name: "__all__"
+            value: "$controller_class"
+
+    - name: schema
+      steps:
+          - type: ask
+            question: What is the schema name?
+            variable: schema_name
+
+          - type: copy
+            from_path: ["schema.py"]
+            to_path: ["app", "models", "schemas", "$schema_name.py"]
+
+          - type: replace
+            path: ["app", "models", "schemas", "$schema_name.py"]
+            replacements:
+                - keyword: SCHEMA_CLASS_NAME
+                  value: $schema_name
+                  mode: pascalcase
+
+          - type: set_var
+            key: schema_class
+            value: $schema_name
+            mode: pascalcase
+
+          - type: add_import
+            path: ["app", "models", "schemas", "__init__.py"]
+            import_statement: "from .$schema_name import $schema_class"
+
+          - type: add_to_list
+            path: ["app", "models", "schemas", "__init__.py"]
+            list_name: "__all__"
+            value: "$schema_class"
+
+    - name: response
+      steps:
+          - type: ask
+            question: What is the response name?
+            variable: response_name
+
+          - type: copy
+            from_path: ["response.py"]
+            to_path: ["app", "models", "responses", "$response_name.py"]
+
+          - type: replace
+            path: ["app", "models", "responses", "$response_name.py"]
+            replacements:
+                - keyword: RESPONSE_CLASS_NAME
+                  value: $response_name
+                  mode: pascalcase
+
+          - type: set_var
+            key: response_class
+            value: $response_name
+            mode: pascalcase
+
+          - type: add_import
+            path: ["app", "models", "responses", "__init__.py"]
+            import_statement: "from .$response_name import $response_class"
+
+          - type: add_to_list
+            path: ["app", "models", "responses", "__init__.py"]
+            list_name: "__all__"
+            value: "$response_class"
+
+    - name: external
+      steps:
+          - type: ask
+            question: What is the external service name?
+            variable: external_name
+
+          - type: copy
+            from_path: ["external.py"]
+            to_path: ["app", "external", "$external_name.py"]
+
+          - type: replace
+            path: ["app", "external", "$external_name.py"]
+            replacements:
+                - keyword: EXTERNAL_CLASS_NAME
+                  value: $external_name
+                  mode: pascalcase
+
+          - type: set_var
+            key: external_class
+            value: $external_name
+            mode: pascalcase
+
+          - type: add_import
+            path: ["app", "external", "__init__.py"]
+            import_statement: "from .$external_name import $external_class"
+
+          - type: add_to_list
+            path: ["app", "external", "__init__.py"]
+            list_name: "__all__"
+            value: "$external_class"
