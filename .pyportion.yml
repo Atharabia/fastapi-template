@@ -1,6 +1,6 @@
 name: fastapi-template
 source: https://github.com/pyportion/fastapi-template
-version: 1.1.0
+version: 1.1.1
 description: A FastAPI Template.
 author: PyPortion Team
 type: fastapi
@@ -170,6 +170,12 @@ portions:
             value: $dependency_name
             mode: pascalcase
 
+          - type: set_var
+            key: dependency_type_alias
+            value: $dependency_name
+            mode: pascalcase
+            suffix: Dep
+
           - type: copy
             from_path: ["dependencies", "dependency.py"]
             to_path: ["app", "dependencies", "$dependency_file_name.py"]
@@ -184,12 +190,12 @@ portions:
 
           - type: add_import
             path: ["app", "dependencies", "__init__.py"]
-            import_statement: "from .$dependency_file_name import $dependency_type_name"
+            import_statement: "from .$dependency_file_name import $dependency_type_alias"
 
           - type: add_to_list
             path: ["app", "dependencies", "__init__.py"]
             list_name: "__all__"
-            value: "$dependency_type_name"
+            value: "$dependency_type_alias"
 
     - name: table
       steps:
@@ -204,7 +210,6 @@ portions:
 
           - type: add_portion
             path: ["app", "database", "tables.py"]
-            class_name: $table_class_name
             value: |
                 class $table_class_name(SQLModel, table=True):
                     id: Optional[int] = Field(default=None, primary_key=True)
