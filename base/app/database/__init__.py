@@ -10,13 +10,10 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from typing_extensions import Concatenate
 from typing_extensions import ParamSpec
 
-from .tables import UserTable
 from app.settings import Settings
 
 
-__all__ = [
-    "UserTable",
-]
+__all__ = []
 
 
 P = ParamSpec("P")

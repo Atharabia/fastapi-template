@@ -1,6 +1,6 @@
 name: fastapi-template
 source: https://github.com/pyportion/fastapi-template
-version: 1.0.0
+version: 1.0.1
 description: A FastAPI Template.
 author: PyPortion Team
 type: fastapi
@@ -11,7 +11,7 @@ portions:
           - type: ask
             question: What is the API name?
             variable: api_name
-          
+
           - type: ask
             question: What is the router prefix?
             variable: router_prefix
@@ -41,7 +41,7 @@ portions:
 
           - type: copy
             from_path: ["api", "router.py"]
-            to_path: ["app", "api", "$api_folder_name", "$"] 
+            to_path: ["app", "api", "$api_folder_name", "$router_file_name"] 
 
           - type: replace
             path: ["app", "api", "$api_folder_name", "__init__.py"]
