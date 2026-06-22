@@ -1,6 +1,6 @@
 name: fastapi-template
 source: https://github.com/pyportion/fastapi-template
-version: 1.1.1
+version: 1.1.2
 description: A FastAPI Template.
 author: PyPortion Team
 type: fastapi
@@ -213,6 +213,15 @@ portions:
             value: |
                 class $table_class_name(SQLModel, table=True):
                     id: Optional[int] = Field(default=None, primary_key=True)
+
+          - type: add_import
+            path: ["app", "database", "__init__.py"]
+            import_statement: "from .tables import $table_class_name"
+
+          - type: add_to_list
+            path: ["app", "database", "__init__.py"]
+            list_name: "__all__"
+            value: "$table_class_name"
 
     - name: model
       steps:
