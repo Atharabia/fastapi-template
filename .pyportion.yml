@@ -41,7 +41,7 @@ portions:
 
           - type: copy
             from_path: ["api", "router.py"]
-            to_path: ["app", "api", "$api_folder_name", "$router_file_name"] 
+            to_path: ["app", "api", "$api_folder_name", "$router_file_name.py"] 
 
           - type: replace
             path: ["app", "api", "$api_folder_name", "__init__.py"]
