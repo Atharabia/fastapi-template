@@ -1,6 +1,6 @@
 name: fastapi-template
 source: https://github.com/pyportion/fastapi-template
-version: 1.0.1
+version: 1.1.0
 description: A FastAPI Template.
 author: PyPortion Team
 type: fastapi
