@@ -1,12 +1,15 @@
 from fastapi import FastAPI
 
-from . import health
+from .general import RoutersRegistry as GeneralRegistry
 
-routers = [health,]
+
+routers = [
+    GeneralRegistry,
+]
 
 
 class RoutersRegistry:
     @staticmethod
     def register_routers(app: FastAPI) -> None:
-        for module in routers:
-            app.include_router(module.router)
+        for router in routers:
+            app.include_router(router.register_routers())
