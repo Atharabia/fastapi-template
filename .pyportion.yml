@@ -61,3 +61,185 @@ portions:
             list_name: "routers"
             value: "$registery_name"
             as_identifier: True
+
+    - name: middleware
+      steps:
+          - type: ask
+            question: What is the middleware name?
+            variable: middleware_name
+
+          - type: set_var
+            key: middleware_file_name
+            value: $middleware_name
+            mode: snakecase
+
+          - type: set_var
+            key: middleware_function_name
+            value: $middleware_name
+            mode: snakecase
+            prefix: configure_
+
+          - type: copy
+            from_path: ["middleware", "middleware.py"]
+            to_path: ["app", "middleware", "$middleware_file_name.py"]
+
+          - type: replace
+            path: ["app", "middleware", "$middleware_file_name.py"]
+            replacements:
+                - keyword: MIDDLEWARE_NAME
+                  value: $middleware_file_name
+
+          - type: add_import
+            path: ["app", "middleware", "__init__.py"]
+            import_statement: "from .$middleware_file_name import $middleware_function_name"
+
+          - type: add_to_list
+            path: ["app", "middleware", "__init__.py"]
+            list_name: "middlewares"
+            value: "$middleware_function_name"
+            as_identifier: True
+
+    - name: external
+      steps:
+          - type: ask
+            question: What is the external service name?
+            variable: external_name
+
+          - type: set_var
+            key: external_folder_name
+            value: $external_name
+            mode: snakecase
+
+          - type: set_var
+            key: external_class_name
+            value: $external_name
+            mode: pascalcase
+            suffix: Client
+
+          - type: create_folder
+            path: ["app", "external", "$external_folder_name"]
+
+          - type: copy
+            from_path: ["external", "__init__.py"]
+            to_path: ["app", "external", "$external_folder_name", "__init__.py"]
+
+          - type: copy
+            from_path: ["external", "client.py"]
+            to_path: ["app", "external", "$external_folder_name", "client.py"]
+
+          - type: replace
+            path: ["app", "external", "$external_folder_name", "__init__.py"]
+            replacements:
+                - keyword: EXTERNAL_CLASS_NAME
+                  value: $external_class_name
+
+          - type: replace
+            path: ["app", "external", "$external_folder_name", "client.py"]
+            replacements:
+                - keyword: EXTERNAL_CLASS_NAME
+                  value: $external_class_name
+
+          - type: add_import
+            path: ["app", "external", "__init__.py"]
+            import_statement: "from .$external_folder_name import $external_class_name"
+
+          - type: add_to_list
+            path: ["app", "external", "__init__.py"]
+            list_name: "__all__"
+            value: "$external_class_name"
+
+    - name: dependency
+      steps:
+          - type: ask
+            question: What is the dependency name?
+            variable: dependency_name
+
+          - type: set_var
+            key: dependency_file_name
+            value: $dependency_name
+            mode: snakecase
+
+          - type: set_var
+            key: dependency_function_name
+            value: $dependency_name
+            mode: snakecase
+            prefix: get_
+
+          - type: set_var
+            key: dependency_type_name
+            value: $dependency_name
+            mode: pascalcase
+
+          - type: copy
+            from_path: ["dependencies", "dependency.py"]
+            to_path: ["app", "dependencies", "$dependency_file_name.py"]
+
+          - type: replace
+            path: ["app", "dependencies", "$dependency_file_name.py"]
+            replacements:
+                - keyword: DEPENDENCY_FUNCTION_NAME
+                  value: $dependency_function_name
+                - keyword: DEPENDENCY_TYPE_NAME
+                  value: $dependency_type_name
+
+          - type: add_import
+            path: ["app", "dependencies", "__init__.py"]
+            import_statement: "from .$dependency_file_name import $dependency_type_name"
+
+          - type: add_to_list
+            path: ["app", "dependencies", "__init__.py"]
+            list_name: "__all__"
+            value: "$dependency_type_name"
+
+    - name: table
+      steps:
+          - type: ask
+            question: What is the table name?
+            variable: table_name
+
+          - type: set_var
+            key: table_class_name
+            value: $table_name
+            mode: pascalcase
+
+          - type: add_portion
+            path: ["app", "database", "tables.py"]
+            class_name: $table_class_name
+            value: |
+                class $table_class_name(SQLModel, table=True):
+                    id: Optional[int] = Field(default=None, primary_key=True)
+
+    - name: model
+      steps:
+          - type: ask
+            question: What is the model/schema name?
+            variable: model_name
+
+          - type: set_var
+            key: model_file_name
+            value: $model_name
+            mode: snakecase
+
+          - type: set_var
+            key: model_class_name
+            value: $model_name
+            mode: pascalcase
+
+          - type: copy
+            from_path: ["models", "schema.py"]
+            to_path: ["app", "models", "schemas", "$model_file_name.py"]
+
+          - type: replace
+            path: ["app", "models", "schemas", "$model_file_name.py"]
+            replacements:
+                - keyword: SCHEMA_CLASS_NAME
+                  value: $model_class_name
+
+          - type: add_import
+            path: ["app", "models", "schemas", "__init__.py"]
+            import_statement: "from .$model_file_name import $model_class_name"
+
+          - type: add_to_list
+            path: ["app", "models", "schemas", "__init__.py"]
+            list_name: "__all__"
+            value: "$model_class_name"

@@ -13,7 +13,7 @@ from typing_extensions import ParamSpec
 from app.settings import Settings
 
 
-__all__ = []
+__all__: list[str] = []
 
 
 P = ParamSpec("P")
